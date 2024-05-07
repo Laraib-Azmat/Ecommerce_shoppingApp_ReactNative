@@ -9,7 +9,6 @@ import Button from '../../UI/Button';
 
 export const Buynow = (props) => {
 
-    const [location, setLocation] = useState('');
     const [contact, setContact] = useState('');
     
   return (
@@ -47,7 +46,7 @@ export const Buynow = (props) => {
                 <Entypo name="location" size={24} color="black" style={buyStyle.buyIcon} />
 
                     <Pressable onPress={()=>props.toggleModel()}  style={buyStyle.buyLocPress}>
-                        <Text>Select Your Location</Text>
+                        <Text style={{margin:5}}>{props.address==="" ? "Select Your Location":props.address}</Text>
                         <Entypo name="chevron-down" size={24} color="black" />
                     </Pressable>
 

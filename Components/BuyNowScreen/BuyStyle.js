@@ -58,7 +58,8 @@ const buyStyle = StyleSheet.create({
         width:260,
         borderRadius:10,
         padding:8,
-        elevation:5
+        elevation:5,
+        alignItems:'center'
     },
     totalPay:{
         flexDirection:'row',

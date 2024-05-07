@@ -16,22 +16,22 @@ export default function LoginScreen({navigation}) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    // useEffect(()=>{
+    useEffect(()=>{
 
-    //     const checkLogin =  async ()=>{
-    //             try{
-    //     setLoading(true);
-    //                     const token = await AsyncStorage.getItem("authToken");
-    //                     if(token){
-    //                         navigation.navigate("first");
-    // setLoading(false);
-    //                     }
-    //             }catch(err){
-    //                     console.log(err)
-    //             }
-    //     }
-    //     checkLogin();
-    // },[])
+        const checkLogin =  async ()=>{
+                try{
+        setLoading(true);
+                        const token = await AsyncStorage.getItem("authToken");
+                        if(token){
+                            navigation.navigate("first");
+    setLoading(false);
+                        }
+                }catch(err){
+                        console.log(err)
+                }
+        }
+        checkLogin();
+    },[])
 
     const loginHandler = async ()=>{
         setLoading(true);

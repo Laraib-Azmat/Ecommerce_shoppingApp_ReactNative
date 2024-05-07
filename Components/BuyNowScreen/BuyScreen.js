@@ -7,16 +7,22 @@ import buyStyle from './BuyStyle';
 import Button from '../../UI/Button';
 import BottomModel from '../../UI/BottomModel';
 import * as Location from "expo-location";
-import * as LocationGeocoding from "expo-location";
+import { Entypo } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export const BuyScreen = ({navigation, route}) => {
+
+//   const API_KEY = "AIzaSyB46CuxR8scW3JvKhglnleCww1D3JKjNHw";
+// const URL = `https://maps.google.com/maps/api/geocode/json?key=${API_KEY}&latlng=`;
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const {total} = route.params ?? null;
     const [locationServicesEnabled, setLocationServicesEnabled] = useState(false);
-    const [displayCurrentAddress, setDisplayCurrentAddress] = useState(  "fetching your location ...");
-
+    const [address, setAddress] = useState("");
+  const [longitude, setLongitude] = useState();
+  const [latitude, setLatitude] = useState();
    
+
 
     const CheckIfLocationEnabled = async () => {
         let enabled = await Location.hasServicesEnabledAsync();
@@ -33,8 +39,9 @@ export const BuyScreen = ({navigation, route}) => {
         }
       };
 
+
       const GetCurrentLocation =async ()=>{
-        let { status } = await Location.requestBackgroundPermissionsAsync();
+        let { status } = await Location.requestForegroundPermissionsAsync();
 
         if (status !== "granted") {
           Alert.alert(
@@ -45,15 +52,43 @@ export const BuyScreen = ({navigation, route}) => {
           );
         }
 
-        // const location = await Location.getCurrentPositionAsync({
-        //     accuracy: Location.Accuracy.High,
-        //   });
+        const location = await Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.High,
+          });
 
-        //   console.log("jidjf");
+          console.log(location);
+          setPosition(location);
 
-        let { coords } = await Location.getCurrentPositionAsync();
+      }
 
-        console.log(coords);
+      const setPosition = async ({ coords: { latitude, longitude } })=>{
+       setLatitude(latitude);
+       setLongitude(longitude);
+     
+      //   fetch(`${URL}${latitude},${longitude}`)
+      //   .then((resp) => resp.json())
+      //   .then(({ results }) => {
+      //     if (results.length > 0) {
+      //       setAddress(results[0].formatted_address);
+      //       console.log(results);
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     console.log(error.message);
+      //   });
+
+      let response = await Location.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      });
+
+      console.log(response)
+
+
+      for (let item of response) {
+        setAddress(item.formattedAddress);
+      }
+   
 
       }
 
@@ -61,6 +96,7 @@ export const BuyScreen = ({navigation, route}) => {
     const currentLocatinoHandler = ()=>{
         CheckIfLocationEnabled();
         GetCurrentLocation();
+        setIsModalVisible(false);
         
     }
 
@@ -71,9 +107,22 @@ export const BuyScreen = ({navigation, route}) => {
 
     const confirmOrderHandler = ()=>{
 
-        navigation.navigate("Thankyou");
+        navigation.navigate("Thankyou", {type:'buy'});
     }
 
+    const setaddress = (place)=>{
+      setAddress(place);
+    }
+
+    const mapHandler =  ()=>{
+      CheckIfLocationEnabled();
+        GetCurrentLocation();
+     setIsModalVisible(false),
+      navigation.navigate("Map",{
+       latitude,longitude,
+       adres:setaddress});
+
+    }
 
   return (
     <View style={{flex:1}}>
@@ -85,7 +134,7 @@ export const BuyScreen = ({navigation, route}) => {
 
      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{flex:1}} >
 
-     <Buynow toggleModel={toggleModel} total={total} />
+     <Buynow toggleModel={toggleModel} total={total} address={address} />
 
    
 
@@ -108,14 +157,21 @@ export const BuyScreen = ({navigation, route}) => {
                         <View style={buyStyle.modelView}>
                             <Text style={buyStyle.modelHeading}>Choose Your Location</Text>
                             <ScrollView >
-                               <Button onPress={()=>{navigation.navigate("Adress"), setIsModalVisible(false)}} >
+                               <Button onPress={()=>{navigation.navigate("Adress"), setIsModalVisible(false), setAddress(place)}} >
                                     <Text>Add Adress or Pickup point</Text>
                                     </Button>
                             </ScrollView>
-                            <View>
-                                <Pressable onPress={currentLocatinoHandler}><Text>use my current location</Text></Pressable>
-                                <Pressable><Text>Location</Text></Pressable>
-                                <Pressable><Text>Location</Text></Pressable>
+                            <View style={{
+                              alignSelf:'flex-start',
+                              gap:20
+                            }}>
+                                <Pressable onPress={currentLocatinoHandler} style={{flexDirection:'row', alignItems:'center', gap:5}}>
+                                <Entypo name="location-pin" size={24} color="black" />
+                                  <Text style={{fontFamily:'PoppinsMedium', fontSize:15, color:'blue', textDecorationLine:'underline'}}>Use my current location</Text></Pressable>
+                                <Pressable onPress={mapHandler} style={{flexDirection:'row', alignItems:'center', gap:5}}>
+                                <MaterialCommunityIcons name="map-marker-radius" size={24} color="black" />
+                                  <Text style={{fontFamily:'PoppinsMedium', fontSize:15, color:'blue', textDecorationLine:'underline'}}>Use map for address</Text></Pressable>
+                               
                             </View>
                         </View>
                     </ModalContent>

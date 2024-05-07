@@ -1,5 +1,5 @@
 import { View, Text, Image } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { BackView } from '../../UI/BackView';
 import Logo from '../../assets/Images/Logo.png';
 import thankStyle from './ThankyouStyle';
@@ -9,6 +9,19 @@ import { Ionicons } from '@expo/vector-icons';
 export default function Thankyou({navigation, route}) {
 
   const {type} = route.params ?? null;
+  const [msg, setMsg] = useState("");
+
+  useEffect(()=>{
+      if(type=='contact'){
+        setMsg("Message sent")
+      }
+      if(type=='signup'){
+        setMsg("Account created!")
+      }
+      if(type=='buy'){
+        setMsg("Payment successful")
+      }
+  },[type])
 
   return (
     <BackView>
@@ -21,8 +34,7 @@ export default function Thankyou({navigation, route}) {
 
     <View style={{flexDirection:'row', alignItems:'center', gap:10}}>
     <Text style={thankStyle.thankText}>
-      
-     { type=='signup'? 'Account created!' : ' Payment Successful'}
+      {msg}
       </Text>
      <Ionicons name="checkmark-circle-sharp" size={34} color="green" />
     </View>

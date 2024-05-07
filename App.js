@@ -3,7 +3,7 @@ import {React, useRef, useEffect, useCallback } from "react";
 //Screens
 import MainScreen from './Components/MainScreen/MainScreen';
 import Profile from './Components/Profile/Profile';
-import Contact from './Components/ContactScreen/Contact';
+import ContactScreen from "./Components/ContactScreen/ContactScreen";
 import { WishletScreen } from "./Components/Wishlets/WishletScreen";
 import Cart from './Components/CartScreen/Cart';
 import Thankyou from "./Components/ThankyouScreen/Thankyou";
@@ -26,6 +26,7 @@ import { ModalPortal } from "react-native-modals";
 import { Adress } from "./Components/BuyNowScreen/Adress";
 import LoginScreen from "./Components/Register/LoginScreen";
 import SignupScreen from "./Components/Register/SignupScreen";
+import MapScreen from "./Components/BuyNowScreen/MapScreen";
 
 
 
@@ -37,7 +38,7 @@ const Tab = createBottomTabNavigator();
 //Object that contain all the information related to screen that we  are going to make. 
 const TabsArray = [
     {name:'Profile', component:Profile, icon:'log-in-outline'},
-    {name:'Contact', component:Contact, icon:'document-text'},
+    {name:'Contact', component:ContactScreen, icon:'document-text'},
     {name:'Home', component:MainScreen, icon:'home-outline'},
     {name:'Wishlet', component:WishletScreen, icon:'heart'},
     {name:'Cart', component:Cart, icon:'cart-outline'}
@@ -184,6 +185,7 @@ export default function App ()  {
       <Stack.Screen name="Buynow" component={BuyScreen} options={{headerShown: false}} />
       <Stack.Screen name="Adress" component={Adress} options={{headerShown: false}} />
       <Stack.Screen name='Thankyou' component={Thankyou}  options={{headerShown:false}} />
+      <Stack.Screen name="Map" component={MapScreen} options={{headerShown:false}} />
     
     </Stack.Navigator>
        </NavigationContainer>
